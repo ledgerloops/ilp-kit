@@ -5,19 +5,13 @@ CREATE TABLE users (
 );
 CREATE TYPE tdirection AS ENUM('IN', 'OUT');
 CREATE TYPE tstatus AS ENUM('pending', 'accepted', 'rejected');
-CREATE TABLE transactions (
+CREATE TABLE messages (
   id SERIAL PRIMARY KEY,
   user_id INT,
   contact_id INT,
   direction tdirection,
-  msgId INT,
-  amount INT DEFAULT 0,
-  description VARCHAR,
-  status tstatus,
-  requested_at timestamp without time zone,
-  responded_at timestamp without time zone,
-  request_json VARCHAR,
-  response_json VARCHAR
+  seen_at timestamp without time zone,
+  message_json VARCHAR
 );
 CREATE TABLE contacts (
   id SERIAL PRIMARY KEY,
@@ -25,9 +19,6 @@ CREATE TABLE contacts (
   name VARCHAR,
   url VARCHAR,
   token VARCHAR,
-  min INT DEFAULT 0,
-  max INT DEFAULT 0,
-  landmark VARCHAR,
   CONSTRAINT unq_userid_name UNIQUE(user_id,name)
 );
 CREATE TABLE preimages (
