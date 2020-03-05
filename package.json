@@ -36,7 +36,7 @@
     "node-static": "^0.7.11",
     "pg": "^7.18.1",
     "randombytes": "^2.1.0",
-    "snap": "github:ledgerloops/snap#draft-half-ledgers"
+    "snap-server": "^0.10.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
