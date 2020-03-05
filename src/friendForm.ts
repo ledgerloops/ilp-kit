@@ -31,4 +31,4 @@ export function FriendForm(who) {
     };
   </script>
 </html>`;
-  }
+}
