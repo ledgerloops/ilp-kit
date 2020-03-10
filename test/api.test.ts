@@ -3,7 +3,7 @@ import btoa from "btoa";
 import { runSql, getObject, close } from "../src/db";
 import { makeHandler } from "../src/app";
 
-async function runSqlFile(filename) {
+async function runSqlFile(filename): Promise<void> {
   const file = fs
     .readFileSync(filename)
     .toString()
@@ -27,10 +27,10 @@ describe("API Access", function() {
     await runSqlFile("./fixture.sql");
     this.snapSent = [];
     this.hubbie = {
-      addClient: () => {
+      addClient: (): undefined => {
         return undefined;
       },
-      send: (peerName, msg, userId) => {
+      send: (peerName, msg, userId): void => {
         this.snapSent.push({ peerName, msg, userId });
       },
       on: () => {
@@ -39,7 +39,7 @@ describe("API Access", function() {
     };
     this.handler = makeHandler(this.hubbie);
   });
-  function doLogin(handler, user, pass) {
+  function doLogin(handler, user, pass): Promise<void> {
     const token = btoa(`${user}:${pass}`);
     return new Promise(resolve =>
       handler(

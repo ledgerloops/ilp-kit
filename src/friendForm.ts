@@ -1,4 +1,4 @@
-export function FriendForm(who) {
+export function FriendForm(who): string {
   return `<!DOCTYPE html>
 <html lang="en">
   <head>

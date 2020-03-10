@@ -4,14 +4,15 @@ import randomBytes from "randombytes";
 
 import { runSql, checkPass, getValue } from "./db";
 import { FriendForm } from "./friendForm";
+import { IncomingMessage, ServerResponse } from "http";
 
 const file = new Static.Server("./public");
 
-function mixInBalances(user, contacts) {
+async function mixInBalances(user, contacts): Promise<object[]> {
   if (!contacts || !contacts.length) {
     return [];
   }
-  async function addBalances(contact) {
+  async function addBalances(contact): Promise<object> {
     return Object.assign(contact, {
       // payable: await balances.getTheirPayable(user, contact),
       // receivable: await balances.getTheirReceivable(user, contact),
@@ -21,11 +22,11 @@ function mixInBalances(user, contacts) {
   return Promise.all(contacts.map(addBalances));
 }
 
-function mixInContactNames(transactions) {
+async function mixInContactNames(transactions): Promise<object[]> {
   if (!transactions || !transactions.length) {
     return [];
   }
-  async function addContactName(transaction) {
+  async function addContactName(transaction): Promise<object> {
     // console.log('adding contact name', transaction);
     return Object.assign(transaction, {
       peerName: await getValue(
@@ -37,7 +38,7 @@ function mixInContactNames(transactions) {
   return Promise.all(transactions.map(addContactName));
 }
 
-function getData(user, resource) {
+function getData(user, resource): Promise<object[]> {
   const columns = {
     contacts: '"id", "userId", "name", "url", "token", "min", "max"',
     transactions:
@@ -57,7 +58,9 @@ function getData(user, resource) {
   });
 }
 
-export function makeHandler(hubbie) {
+export function makeHandler(
+  hubbie
+): (req: IncomingMessage, res: ServerResponse) => void {
   hubbie.on("peer", async eventObj => {
     // FIXME: these same two SQL queries are repeated in the message event
     const users = await runSql("SELECT * FROM users WHERE name = $1", [
@@ -71,17 +74,17 @@ export function makeHandler(hubbie) {
     const user = users[0];
     const contacts = await runSql(
       "SELECT * FROM contacts WHERE name = $1 AND userId  = $2",
-      [eventObj.peerName, user.id]
+      [eventObj.peerName, (user as { id: number }).id]
     );
     if (contacts === null || contacts.length === 0) {
       // console.log('verdict 2 true!');
       await runSql(
         "INSERT INTO contacts (userId, name, token, landmark) VALUES ($1, $2, $3, $4)",
         [
-          user.id,
+          (user as { id: number }).id,
           eventObj.peerName,
           eventObj.peerSecret,
-          `${user.name}:${eventObj.peerName}`
+          `${(user as { name: string }).name}:${eventObj.peerName}`
         ]
       );
       return true;
@@ -89,9 +92,9 @@ export function makeHandler(hubbie) {
     // console.log('still here 2');
     const contact = contacts[0];
     // console.log('contact found!', eventObj, users, contacts);
-    return eventObj.peerSecret === contact.token;
+    return eventObj.peerSecret === (contact as { token: string }).token;
   });
-  function hubbieSend(user, contact, obj) {
+  function hubbieSend(user, contact, obj): Promise<void> {
     // console.log('hubbieSend', user, contact, obj);
     // FIXME: even when using http, maybe this peer should already exist if a message is
     // being received from them?
@@ -116,22 +119,22 @@ export function makeHandler(hubbie) {
     const user = users[0];
     const contacts = await runSql(
       "SELECT * FROM contacts WHERE name = $1 AND userId  = $2",
-      [peerName, user.id]
+      [peerName, (user as { id: number }).id]
     );
     if (contacts === null || contacts.length === 0) {
       return false;
     }
-    const contact = contacts[0];
-    return snapIn(user, contact, msg, hubbieSend);
+    // const contact = contacts[0];
+    // return snapIn(user, contact, msg, hubbieSend);
   });
 
-  return function handler(req, res) {
+  return function handler(req: IncomingMessage, res: ServerResponse): void {
     // console.log('hubbie passed req to app\'s own handler', req.method, req.url);
     let body = "";
     req.on("data", chunk => {
       body += chunk;
     });
-    async function handleReq() {
+    async function handleReq(): Promise<void> {
       const [, resource, who] = req.url.split("/");
       switch (resource) {
         case "session":
@@ -158,14 +161,14 @@ export function makeHandler(hubbie) {
               throw new Error("auth fail");
             }
             // console.log('calling snapOut', user, JSON.parse(body));
-            const transactionId = await snapOut(
-              user,
-              JSON.parse(body),
-              hubbieSend
-            );
+            // const transactionId = await snapOut(
+            //   user,
+            //   JSON.parse(body),
+            //   hubbieSend
+            // );
             const response = {
               ok: true,
-              transactionId,
+              // transactionId,
               contacts: await getData(user, "contacts"),
               transactions: await getData(user, "transactions")
             };
@@ -183,7 +186,8 @@ export function makeHandler(hubbie) {
             if (user === false) {
               throw new Error("auth fail");
             }
-            const result = await loop(user, JSON.parse(body), hubbieSend);
+            // const result = await loop(user, JSON.parse(body), hubbieSend);
+            const result = null;
             res.end(JSON.stringify({ ok: true, result }));
           } catch (e) {
             res.end(JSON.stringify({ ok: false, error: e.message }));
@@ -198,11 +202,12 @@ export function makeHandler(hubbie) {
             if (user === false) {
               throw new Error("auth fail");
             }
-            const result = await routing.sendRoutes(
-              user,
-              JSON.parse(body),
-              hubbieSend
-            );
+            // const result = await routing.sendRoutes(
+            //   user,
+            //   JSON.parse(body),
+            //   hubbieSend
+            // );
+            const result = null;
             res.end(JSON.stringify({ ok: true, result }));
           } catch (e) {
             res.end(JSON.stringify({ ok: false, error: e.message }));
@@ -235,7 +240,8 @@ export function makeHandler(hubbie) {
                 const landmark = randomBytes(12).toString("hex");
 
                 const contact = {
-                  userId: user.id,
+                  id: undefined,
+                  userId: (user as { id: number }).id,
                   name: obj.name,
                   url: `${obj.url}/${channel}`,
                   token,
@@ -276,10 +282,10 @@ export function makeHandler(hubbie) {
                   msgType: "FRIEND-REQUEST",
                   url: `${hubbie.myBaseUrl}/${username}/${channel}`,
                   trust: -obj.min,
-                  myName: user.name,
+                  myName: (user as { name: string }).name,
                   token: contact.token
                 });
-                await routing.sendRoutesToNewContact(user, contact, hubbieSend);
+                // await routing.sendRoutesToNewContact(user, contact, hubbieSend);
               }
             }
             if (req.method === "DELETE" && resource === "contacts") {
@@ -289,7 +295,7 @@ export function makeHandler(hubbie) {
               };
               await runSql(
                 "DELETE FROM contacts WHERE userId = $1 AND id = $2;",
-                [user.id, contact.id]
+                [(user as { id: number }).id, contact.id]
               );
             }
             const data = await getData(user, resource);

@@ -4,7 +4,7 @@ import { Pool } from "pg";
 let pool;
 let client;
 
-export async function runSql(query, params?) {
+export async function runSql(query, params?): Promise<object[]> {
   if (!pool) {
     pool = new Pool({
       connectionString:
@@ -29,7 +29,10 @@ export async function runSql(query, params?) {
   }
 }
 
-export function checkPass(username, password) {
+export function checkPass(
+  username,
+  password
+): Promise<{ id: number; name: string } | boolean> {
   // console.log('checking  password', username, password);
   return runSql("SELECT * FROM users WHERE name=$1", [username]).then(
     results => {
@@ -45,7 +48,7 @@ export function checkPass(username, password) {
             ])
           );
       }
-      const secretHash = results[0].secrethash;
+      const secretHash = (results[0] as { secrethash: string }).secrethash;
       // console.log('returning compare', results, password, secretHash);
       return bcrypt
         .compare(password, secretHash)
@@ -54,7 +57,7 @@ export function checkPass(username, password) {
   );
 }
 
-export function getObject(query, params?) {
+export function getObject(query, params?): Promise<object> {
   return runSql(query, params).then(results => {
     if (!results || !results.length) {
       // console.log('throwing row not found!', query, params);
@@ -64,9 +67,9 @@ export function getObject(query, params?) {
   });
 }
 
-export function getValue(query, params?, defaultVal?) {
+export function getValue(query, params?, defaultVal?): Promise<number> {
   return getObject(query, params)
-    .then(obj => obj.value)
+    .then((obj: { value: number }) => obj.value)
     .catch(e => {
       if (e.message === "db row not found" && defaultVal !== undefined) {
         return defaultVal;
@@ -75,7 +78,7 @@ export function getValue(query, params?, defaultVal?) {
     });
 }
 
-export function close() {
+export function close(): void {
   client.release();
   client = null;
   return pool.end().then(() => {

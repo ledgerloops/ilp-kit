@@ -3,7 +3,7 @@ import fs from "fs";
 import { runSql, getObject } from "../src/db";
 import { makeHandler } from "../src/app";
 
-async function runSqlFile(filename) {
+async function runSqlFile(filename): void {
   const file = fs
     .readFileSync(filename)
     .toString()
@@ -25,13 +25,13 @@ describe("Contacts", function() {
     await runSqlFile("./fixture.sql");
     this.hubbieHandler = {};
     this.hubbie = {
-      addClient: () => {
+      addClient: (): undefined => {
         return undefined;
       },
-      send: (peerName, msg, userId) => {
+      send: (peerName, msg, userId): void => {
         this.snapSent.push({ peerName, msg, userId });
       },
-      on: (eventName, eventHandler) => {
+      on: (eventName, eventHandler): void => {
         this.hubbieHandler[eventName] = eventHandler;
       }
     };
@@ -83,12 +83,12 @@ describe("Contacts", function() {
       assert.deepEqual(newContact, {
         userId: 1,
         id: 8,
-        landmark: newContact.landmark, // UUID
+        landmark: (newContact as { landmark: string }).landmark, // UUID
         max: 0,
         min: -5,
         name: "name",
-        token: newContact.token,
-        url: newContact.url
+        token: (newContact as { token: string }).token,
+        url: (newContact as { url: string }).url
       });
     });
 
@@ -164,7 +164,7 @@ describe("Contacts", function() {
         min: 0,
         name: "fred",
         token: "incoming_token",
-        url: newContact.url
+        url: (newContact as { url: string }).url
       });
     });
 
@@ -267,12 +267,12 @@ describe("Contacts", function() {
       assert.deepEqual(contact, {
         userId: 1,
         id: 2,
-        landmark: contact.landmark,
+        landmark: (contact as { landmark: string }).landmark,
         max: 0,
         min: -5,
         name: "name",
-        token: contact.token,
-        url: contact.url
+        token: (contact as { token: string }).token,
+        url: (contact as { url: string }).url
       });
     });
 
