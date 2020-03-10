@@ -1,5 +1,5 @@
 DROP TABLE users;
-DROP TABLE transactions;
+DROP TABLE messages;
 DROP TYPE tdirection;
 DROP TYPE tstatus;
 DROP TABLE contacts;
