@@ -33,7 +33,7 @@ describe("API Access", function() {
       send: (peerName, msg, userId): void => {
         this.snapSent.push({ peerName, msg, userId });
       },
-      on: () => {
+      on: (): undefined => {
         return undefined;
       }
     };
@@ -78,7 +78,7 @@ describe("API Access", function() {
       expect(newUser).toEqual({
         id: 4,
         name: "someone",
-        secrethash: newUser.secrethash
+        secrethash: (newUser as { secrethash: string }).secrethash
       });
     });
   });

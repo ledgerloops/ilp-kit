@@ -1,9 +1,8 @@
-import { assert } from "chai";
 import fs from "fs";
 import { runSql, getObject } from "../src/db";
 import { makeHandler } from "../src/app";
 
-async function runSqlFile(filename): void {
+async function runSqlFile(filename): Promise<void> {
   const file = fs
     .readFileSync(filename)
     .toString()
@@ -80,7 +79,7 @@ describe("Contacts", function() {
     it.skip("creates a contact", async function() {
       const contacts = await runSql("SELECT * FROM contacts");
       const newContact = contacts[contacts.length - 1];
-      assert.deepEqual(newContact, {
+      expect(newContact).toEqual({
         userId: 1,
         id: 8,
         landmark: (newContact as { landmark: string }).landmark, // UUID
@@ -107,7 +106,7 @@ describe("Contacts", function() {
         }),
         userId: "michiel"
       };
-      assert.deepEqual(this.snapSent[0], expectedFriendRequest);
+      expect(this.snapSent[0]).toEqual(expectedFriendRequest);
     });
 
     it.skip("announces the landmark", async function() {
@@ -128,7 +127,7 @@ describe("Contacts", function() {
         }),
         userId: "michiel"
       };
-      assert.deepEqual(this.snapSent[1], expectedLandmarkAnnouncement);
+      expect(this.snapSent[1]).toEqual(expectedLandmarkAnnouncement);
     });
   });
 
@@ -156,7 +155,7 @@ describe("Contacts", function() {
     it.skip("creates a contact", async function() {
       const contacts = await runSql("SELECT * FROM contacts");
       const newContact = contacts[contacts.length - 1];
-      assert.deepEqual(newContact, {
+      expect(newContact).toEqual({
         userId: 1,
         id: 8,
         landmark: "michiel:name",
@@ -187,7 +186,7 @@ describe("Contacts", function() {
       );
       const contacts = await runSql("SELECT * FROM contacts");
       const newContact = contacts[contacts.length - 1];
-      assert.deepEqual(newContact, {
+      expect(newContact).toEqual({
         userId: 1,
         id: 9,
         landmark: "michiel:name2",
@@ -195,7 +194,7 @@ describe("Contacts", function() {
         min: 0,
         name: "fred 2",
         token: "incoming_token2",
-        url: newContact.url
+        url: (newContact as { url: string }).url
       });
     });
 
@@ -217,7 +216,7 @@ describe("Contacts", function() {
         }),
         userId: "michiel"
       };
-      assert.deepEqual(this.snapSent[0], expectedLandmarkAnnouncement);
+      expect(this.snapSent[0]).toEqual(expectedLandmarkAnnouncement);
     });
   });
 
@@ -264,7 +263,7 @@ describe("Contacts", function() {
         "SELECT * FROM contacts WHERE user_id = $1 AND id = $2",
         [1, 2]
       );
-      assert.deepEqual(contact, {
+      expect(contact).toEqual({
         userId: 1,
         id: 2,
         landmark: (contact as { landmark: string }).landmark,
@@ -291,7 +290,7 @@ describe("Contacts", function() {
         }),
         userId: "michiel"
       };
-      assert.deepEqual(this.snapSent[0], expectedFriendRequest);
+      expect(this.snapSent[0]).toEqual(expectedFriendRequest);
     });
 
     it.skip("announces the updated landmark", async function() {
@@ -312,7 +311,7 @@ describe("Contacts", function() {
         }),
         userId: "michiel"
       };
-      assert.deepEqual(this.snapSent[1], expectedLandmarkAnnouncement);
+      expect(this.snapSent[1]).toEqual(expectedLandmarkAnnouncement);
     });
   });
 
@@ -346,7 +345,7 @@ describe("Contacts", function() {
         "SELECT * FROM contacts WHERE user_id = $1 AND id = $2",
         [1, 2]
       );
-      assert.equal(matchingContacts, null);
+      expect(matchingContacts).toEqual(null);
     });
   });
 
