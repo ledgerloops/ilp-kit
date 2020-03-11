@@ -1,4 +1,4 @@
-import { Hubbie } from "hubbie";
+import Hubbie from "hubbie";
 import { makeHandler } from "./app";
 import { runSql } from "./db";
 
@@ -13,4 +13,4 @@ hubbie.listen({
   handler: makeHandler(hubbie)
 });
 
-runSql("SELECT now();", {}); // test db connection
+runSql("SELECT now();", []); // test db connection
