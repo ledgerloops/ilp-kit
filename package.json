@@ -4,11 +4,11 @@
   "description": "Network Ledger Technology (demo server)",
   "files": [
     "src",
-    "lib"
+    "public"
   ],
   "main": "lib/app.js",
   "scripts": {
-    "build": "babel src -d lib --source-maps --extensions \".ts\"",
+    "build": "babel src -d public/built --source-maps --extensions \".ts\"",
     "coverage": "jest --collect-coverage",
     "jest": "jest",
     "lint": "eslint src/ test/ --ext .ts",
