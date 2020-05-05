@@ -2,6 +2,8 @@ import { SnapTransactionState } from "snap-checker";
 import { SnapSolid, SnapContact } from "snap-solid";
 import { forDebugging } from "./forDebugging";
 
+const HOME_OF_ALICE_AND_BOB = "michiels-nlt-kit.herokuapp.com";
+
 export async function runPresentation(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   window: any,
@@ -21,7 +23,10 @@ export async function runPresentation(
     await snapSolid.addContact(webId, nick);
   };
   let peer = "alice";
-  if (sessionWebId === "https://lolcathost.de/storage/alice/profile/card#me") {
+  if (
+    sessionWebId ===
+    `https://${HOME_OF_ALICE_AND_BOB}/storage/alice/profile/card#me`
+  ) {
     peer = "bob";
   }
   let foundPeer = false;
@@ -70,7 +75,7 @@ export async function runPresentation(
       .getElementById("webId")
       .setAttribute(
         "value",
-        `https://lolcathost.de/storage/${encodeURIComponent(
+        `https://${HOME_OF_ALICE_AND_BOB}/storage/${encodeURIComponent(
           peer
         )}/profile/card#me`
       );
