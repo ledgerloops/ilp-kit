@@ -1,6 +1,6 @@
-# snap-solid
+# nlt-kit based on snap-solid)
 
-SNAP in the browser, on top of Solid
+SNAP in the browser, on top of Solid.
 
 Create the following files:
 
