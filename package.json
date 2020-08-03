@@ -15,8 +15,7 @@
     "postversion": "git push && git push --tags && npm publish",
     "prettier": "prettier --write \"{src,test,__mocks__}/**/*.ts\"",
     "preversion": "npm test",
-    "start": "npx solid-app-kit public/",
-    "start-lolcathost": "NODE_EXTRA_CA_CERTS=myCA.pem DEBUG=* HTTPS_DOMAIN=lolcathost.de node ./node_modules/solid-app-kit/lib/cli public/",
+    "start": "node ./node_modules/solid-app-kit/lib/cli public/",
     "test": "npm run build && npm run lint && npm run jest",
     "version": "npm run build"
   },
