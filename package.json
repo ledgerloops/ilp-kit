@@ -46,7 +46,7 @@
     "jest": "^25.5.4",
     "prettier": "^1.19.1",
     "pretty-quick": "^2.0.1",
-    "solid-app-kit": "^1.7.0",
+    "solid-app-kit": "^1.8.2",
     "source-map-loader": "^0.2.4",
     "typescript": "^3.9.7",
     "webpack": "^4.44.1",

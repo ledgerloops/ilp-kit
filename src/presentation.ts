@@ -2,7 +2,7 @@ import { SnapTransactionState } from "snap-checker";
 import { SnapSolid, SnapContact } from "snap-solid";
 import { forDebugging } from "./forDebugging";
 
-const HOME_OF_ALICE_AND_BOB = "michiels-nlt-kit.herokuapp.com";
+const HOME_OF_ALICE_AND_BOB = "lolcathost.de";
 
 export async function runPresentation(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
