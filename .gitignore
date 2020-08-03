@@ -2,4 +2,10 @@ node_modules
 lib
 coverage
 public/webpack.bundle.js
-
+lolcathost.de.crt
+lolcathost.de.csr
+lolcathost.de.ext
+lolcathost.de.key
+myCA.key
+myCA.pem
+myCA.srl
