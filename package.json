@@ -17,7 +17,8 @@
     "preversion": "npm test",
     "start": "node ./node_modules/solid-app-kit/lib/cli public/",
     "test": "npm run build && npm run lint && npm run jest",
-    "version": "npm run build"
+    "version": "npm run build",
+    "watch": "webpack --watch"
   },
   "repository": {
     "type": "git",

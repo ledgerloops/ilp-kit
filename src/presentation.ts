@@ -32,7 +32,7 @@ export async function runPresentation(
   let foundPeer = false;
   const contacts = await snapSolid.getContacts();
   const promises = contacts.map(async (contact: SnapContact) => {
-    if (contact.solidContact.theirInbox.split("/")[4] === peer) {
+    if (contact.solidContact.theirInbox?.split("/")[4] === peer) {
       foundPeer = true;
     }
     const li = document.createElement("li");
