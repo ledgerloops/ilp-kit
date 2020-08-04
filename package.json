@@ -61,7 +61,7 @@
   "dependencies": {
     "rdf-namespaces": "^1.8.0",
     "snap-checker": "^1.5.2",
-    "snap-solid": "^2.0.3",
+    "snap-solid": "^2.0.4",
     "tripledoc": "^4.3.4",
     "uuid": "^7.0.3"
   }

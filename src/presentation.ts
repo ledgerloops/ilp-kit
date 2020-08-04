@@ -30,6 +30,7 @@ export async function runPresentation(
     peer = "bob";
   }
   let foundPeer = false;
+  await snapSolid.podData.checkFriendRequests();
   const contacts = await snapSolid.getContacts();
   const promises = contacts.map(async (contact: SnapContact) => {
     if (contact.solidContact.theirInbox?.split("/")[4] === peer) {
