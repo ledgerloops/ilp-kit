@@ -1,4 +1,3 @@
-import { SnapSolid } from "./SnapSolid";
 import {
   fetchDocument,
   createDocument,
