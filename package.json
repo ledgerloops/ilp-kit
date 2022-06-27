@@ -63,6 +63,6 @@
     "snap-checker": "^1.5.2",
     "snap-solid": "^2.1.0",
     "tripledoc": "^4.3.4",
-    "uuid": "^7.0.3"
+    "uuid": "^8.3.2"
   }
 }
